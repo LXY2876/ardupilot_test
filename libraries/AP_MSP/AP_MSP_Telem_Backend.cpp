@@ -545,6 +545,13 @@ MSPCommandResult AP_MSP_Telem_Backend::msp_process_sensor_command(uint16_t cmd_m
     }
     break;
 #endif
+// #if AP_AOA_MSP_ENABLED && AP_AOA_ENABLED
+//     case MSP2_SENSOR_AOA: {
+//         const MSP::msp_aoa_data_message_t *pkt = (const MSP::msp_aoa_data_message_t *)src->ptr;
+//         msp_handle_aoa(*pkt);
+//     }
+//     break;
+// #endif
     }
 
     return MSP_RESULT_NO_REPLY;

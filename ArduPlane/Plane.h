@@ -55,7 +55,7 @@
 #include <AP_Logger/AP_Logger.h>
 #include <AP_Scheduler/AP_Scheduler.h>       // main loop scheduler
 #include <AP_Scheduler/PerfInfo.h>                  // loop perf monitoring
-
+#include <AP_AOA/AP_AOA.h>
 #include <AP_Navigation/AP_Navigation.h>
 #include <AP_L1_Control/AP_L1_Control.h>
 #include <AP_RCMapper/AP_RCMapper.h>        // RC input mapping library
@@ -121,7 +121,7 @@
 #include "avoidance_adsb.h"
 #endif
 #include "AP_Arming.h"
-
+#include "jet_control.h"
 /*
   main APM:Plane class
  */
@@ -171,11 +171,11 @@ public:
     friend class ModeTakeoff;
     friend class ModeThermal;
     friend class ModeLoiterAltQLand;
-
+    friend class Mode_NEW_MODE;
 #if AP_EXTERNAL_CONTROL_ENABLED
     friend class AP_ExternalControl_Plane;
 #endif
-
+    jet_control jet_controller;
     Plane(void);
 
 private:
@@ -318,7 +318,7 @@ private:
 #if HAL_SOARING_ENABLED
     ModeThermal mode_thermal;
 #endif
-
+    Mode_NEW_MODE mode_new_mode;
     // This is the state of the flight control system
     // There are multiple states defined such as MANUAL, FBW-A, AUTO
     Mode *control_mode = &mode_initializing;
@@ -1034,6 +1034,7 @@ private:
 #endif
 
     // ArduPlane.cpp
+    void user_defined_function();
     void disarm_if_autoland_complete();
     bool trigger_land_abort(const float climb_to_alt_m);
     void get_osd_roll_pitch_rad(float &roll, float &pitch) const override;
@@ -1048,6 +1049,7 @@ private:
     void update_GPS_10Hz(void);
     void update_compass(void);
     void update_alt(void);
+    void update_aoa(void);
 #if AP_ADVANCEDFAILSAFE_ENABLED
     void afs_fs_check(void);
 #endif

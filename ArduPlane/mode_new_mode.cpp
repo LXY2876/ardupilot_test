@@ -1,7 +1,7 @@
 #include "mode.h"
 #include "Plane.h"
 
-void ModeFBWA::update()
+void Mode_NEW_MODE::update()
 {
     // set nav_roll and nav_pitch using sticks
     plane.nav_roll_cd  = plane.channel_roll->norm_input() * plane.roll_limit_cd;
@@ -34,13 +34,16 @@ void ModeFBWA::update()
             }
         }
     }
+ 
+
 
 }
 
-void ModeFBWA::run()
+void Mode_NEW_MODE::run()
 {
     // Run base class function and then output throttle
     Mode::run();
-
+    // gcs().send_text(MAV_SEVERITY_CRITICAL,  //地面站消息发送
+    // "mode fly");
     output_pilot_throttle();
 }

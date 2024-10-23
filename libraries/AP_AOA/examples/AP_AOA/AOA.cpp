@@ -17,11 +17,8 @@
  *   Airspeed.cpp - airspeed example sketch
  *
  */
- 
-// #define AP_AIRSPEED_ENABLED 1
-// #define AP_AIRSPEED_MS4525_ENABLED 1
-#include <AP_AHRS/AP_AHRS.h>
-#include <AP_Airspeed/AP_Airspeed.h>
+
+#include <AP_AOA/AP_AOA.h>
 #include <AP_HAL/AP_HAL.h>
 #include <AP_BoardConfig/AP_BoardConfig.h>
 #include <GCS_MAVLink/GCS_Dummy.h>
@@ -34,11 +31,12 @@ const AP_HAL::HAL& hal = AP_HAL::get_HAL();
 float temperature;
 
 // create an AHRS object for get_airspeed_max
-AP_AHRS ahrs;
- 
-// create airspeed object
-AP_Airspeed airspeed;
+// AP_AHRS ahrs;
 
+// create airspeed object
+
+// AS_5600 as5600;
+AP_Aoa aoa;
 static AP_BoardConfig board_config;
 
 namespace {
@@ -58,21 +56,20 @@ void set_object_value(const void *object_pointer,
 void setup()
 {
     
-
     // set airspeed pin to 65, enable and use to true
     // set_object_value(&airspeed, airspeed.var_info, "PIN", 65);
-    // set_object_value(&airspeed, airspeed.var_info, "TYPE", 1);
-    // set_object_value(&airspeed, airspeed.var_info, "BUS", 0);
-    set_object_value(&airspeed, airspeed.var_info, "ENABLE", 1);
-    set_object_value(&airspeed, airspeed.var_info, "USE", 1);
-    airspeed.set_param_type(1);
+    set_object_value(&aoa, aoa.var_info, "ENABLE", 1);
+    set_object_value(&aoa, aoa.var_info, "USE", 1);
+    aoa.set_param_type(1);
     board_config.init();
-    hal.console->printf("ArduPilot Airspeed library test\n"); 
+    hal.console->printf("ArduPilot AOA library test\n");
+    // as5600.init();
+    // as5600.checkConnect();
     // initialize airspeed
     // Note airspeed.set_log_bit(LOG_BIT) would need to be called in order to enable logging
-    airspeed.init();
-    
-    airspeed.calibrate(false);
+    // airspeed.init();
+    aoa.init();
+    aoa.calibrate(false);
 }
 
 // loop
@@ -82,20 +79,26 @@ void loop(void)
 
     // run read() and get_temperature() in 10Hz
     if ((AP_HAL::millis() - timer) > 100) {
-
-        // current system time in milliseconds
+        // // current system time in milliseconds
+        // timer = AP_HAL::millis();
+        // airspeed.update();
+        // airspeed.get_temperature(temperature);
+        // print temperature and airspeed to console
+        // hal.console->printf("aoa =%d\n",
+        //                     as5600.getRawAngle());
+        // hal.console->printf("hello world\n");
+        // as5600.checkConnect();
+                // current system time in milliseconds
         timer = AP_HAL::millis();
-        airspeed.update();
-        airspeed.get_temperature(temperature);
+        aoa.update();
+        aoa.get_temperature(temperature);
 
         // print temperature and airspeed to console
         hal.console->printf("airspeed %5.2f temperature %6.2f healthy = %u\n",
-                            (double)airspeed.get_airspeed(), (double)temperature, airspeed.healthy());
+                            (double)aoa.get_aoa(), (double)temperature, aoa.healthy());
         // hal.console->printf("hello world");
       
-        // hal.console->printf("sensor = %d",airspeed.get_param_bus() );
-
-
+        // hal.console->printf("sensor = %d",aoa.get_param_bus() );
 
     }
     hal.scheduler->delay(1);

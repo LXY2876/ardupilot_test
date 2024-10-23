@@ -54,6 +54,7 @@ public:
 #if HAL_QUADPLANE_ENABLED
         LOITER_ALT_QLAND = 25,
 #endif
+        NEW_MODE = 27,
     };
 
     // Constructor
@@ -859,3 +860,20 @@ protected:
 };
 
 #endif
+
+class Mode_NEW_MODE : public Mode
+{
+public:
+
+    Number mode_number() const override { return Number::NEW_MODE; }
+    const char *name() const override { return "NEW_MODE"; }
+    const char *name4() const override { return "NewMode"; }
+
+    // methods that affect movement of the vehicle in this mode
+    void update() override;
+    
+    bool mode_allows_autotuning() const override { return true; }
+
+    void run() override;
+
+};

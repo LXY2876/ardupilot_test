@@ -163,7 +163,10 @@ public:
         float differential_pressure; // Pa
         float temperature; // degC
     } airspeed_data_message_t;
-
+    typedef struct {
+        float aoa; // Pa
+        
+    } aoa_data_message_t;
     // set GNSS disable for auxillary function GPS_DISABLE
     void set_gnss_disable(bool disable) {
         gnss_is_disabled = disable;

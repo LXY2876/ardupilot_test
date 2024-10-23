@@ -28,6 +28,7 @@
 #include <AP_AHRS/AP_AHRS.h>
 #include <AP_AccelCal/AP_AccelCal.h>
 #include <AP_Airspeed/AP_Airspeed.h>
+#include <AP_AOA/AP_AOA.h>
 #include <AP_Baro/AP_Baro.h>
 #include <AP_BoardConfig/AP_BoardConfig.h>     // board configuration library
 #include <AP_CANManager/AP_CANManager.h>
@@ -442,6 +443,10 @@ protected:
 
 #if AP_AIRSPEED_ENABLED
     AP_Airspeed airspeed;
+#endif
+
+#if AP_AOA_ENABLED
+    AP_Aoa aoa;
 #endif
 
 #if AP_STATS_ENABLED

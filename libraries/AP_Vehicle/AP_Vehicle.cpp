@@ -148,6 +148,12 @@ const AP_Param::GroupInfo AP_Vehicle::var_info[] = {
     AP_SUBGROUPINFO(kdecan, "KDE_",  19, AP_Vehicle, AP_KDECAN),
 #endif
 
+#if AP_KDECAN_ENABLED
+    // @Group: KDE_
+    // @Path: ../AP_KDECAN/AP_KDECAN.cpp
+    AP_SUBGROUPINFO(aoa, "KDE_",  20, AP_Vehicle, AP_Aoa),
+#endif
+
 #if APM_BUILD_COPTER_OR_HELI || APM_BUILD_TYPE(APM_BUILD_ArduPlane) || APM_BUILD_TYPE(APM_BUILD_Rover)
     // @Param: FLTMODE_GCSBLOCK
     // @DisplayName: Flight mode block from GCS
@@ -422,6 +428,10 @@ void AP_Vehicle::setup()
 
 #if AP_SCRIPTING_ENABLED
     scripting.init();
+#endif // AP_SCRIPTING_ENABLED
+
+#if AP_AOA_ENABLED
+    aoa.init();
 #endif // AP_SCRIPTING_ENABLED
 
 #if AP_AIRSPEED_ENABLED

@@ -59,6 +59,7 @@ const AP_Scheduler::Task Plane::scheduler_tasks[] = {
     FAST_TASK(update_control_mode),
     FAST_TASK(stabilize),
     FAST_TASK(set_servos),
+    SCHED_TASK(user_defined_function,  0.5,   500,   8),
     SCHED_TASK(read_radio,             50,    100,   6),
     SCHED_TASK(check_short_failsafe,   50,    100,   9),
     SCHED_TASK(update_speed_height,    50,    200,  12),
@@ -66,6 +67,7 @@ const AP_Scheduler::Task Plane::scheduler_tasks[] = {
     SCHED_TASK_CLASS(RC_Channels,     (RC_Channels*)&plane.g2.rc_channels, read_mode_switch,           7,    100, 27),
     SCHED_TASK(update_GPS_50Hz,        50,    300,  30),
     SCHED_TASK(update_GPS_10Hz,        10,    400,  33),
+    SCHED_TASK(update_aoa,              10,    300,  34),
     SCHED_TASK(navigate,               10,    150,  36),
     SCHED_TASK(update_compass,         10,    200,  39),
     SCHED_TASK(calc_airspeed_errors,   10,    100,  42),
@@ -140,7 +142,38 @@ const AP_Scheduler::Task Plane::scheduler_tasks[] = {
     SCHED_TASK(precland_update, 400, 50, 160),
 #endif
 };
+void Plane::update_aoa(void){
+    aoa.update();
+}
 
+void Plane::user_defined_function(void){
+     
+    // char message[50]; 
+    float reward;
+    float output;
+    if(!plane.battery.consumed_wh(reward))
+    {   
+        return ;
+    }
+    
+    
+    if (control_mode==&mode_manual){
+        if(jet_controller.index<NUM_POINT_NM){
+        if(jet_controller.index>0){
+            jet_controller.add_to_list(reward);    
+        }
+        output=jet_controller.probe();
+        }else{
+           output=jet_controller.iteration(reward); 
+        }
+    //         snprintf(message, sizeof(message), "Value: %.5f", ahrs.get_roll());
+    // // snprintf(message, sizeof(message), "Value: %.5f", plane.battery.voltage());  // 格式化浮点数
+    //  gcs().send_text(MAV_SEVERITY_CRITICAL,"%s", //地面站消息发送
+    // message);    
+        SRV_Channels::set_output_scaled(SRV_Channel::k_flap, output);//0~100
+         
+    }
+}
 void Plane::get_scheduler_tasks(const AP_Scheduler::Task *&tasks,
                                 uint8_t &task_count,
                                 uint32_t &log_bit)

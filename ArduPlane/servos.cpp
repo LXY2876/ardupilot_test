@@ -900,12 +900,14 @@ void Plane::set_servos(void)
     set_takeoff_expected();
 
     // setup flap outputs
-    set_servos_flaps();
+ 
+    // set_servos_flaps();
+ 
 
-#if AP_LANDINGGEAR_ENABLED
-    // setup landing gear output
-    set_landing_gear();
-#endif
+// #if AP_LANDINGGEARENABLED
+//     // setup landing gear output
+//     set_landing_gear();
+// #endif
 
     // set airbrake outputs
     airbrake_update();

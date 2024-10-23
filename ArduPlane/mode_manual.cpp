@@ -17,6 +17,7 @@ void ModeManual::update()
 void ModeManual::run()
 {
     reset_controllers();
+
 }
 
 // true if throttle min/max limits should be applied

@@ -522,7 +522,11 @@ struct PACKED log_ARSP {
     float   test_ratio;
     uint8_t primary;
 };
-
+struct PACKED log_AOA {
+    LOG_PACKET_HEADER;
+    uint64_t time_us;
+    float   aoa;
+};
 struct PACKED log_MAV_Stats {
     LOG_PACKET_HEADER;
     uint64_t timestamp;
@@ -1228,6 +1232,8 @@ LOG_STRUCTURE_FROM_CAMERA \
 LOG_STRUCTURE_FROM_MOUNT \
     { LOG_ARSP_MSG, sizeof(log_ARSP), "ARSP",  "QBffcffBBffB", "TimeUS,I,Airspeed,DiffPress,Temp,RawPress,Offset,U,H,Hp,TR,Pri", "s#nPOPP-----", "F-00B00-----", true }, \
     LOG_STRUCTURE_FROM_BATTMONITOR \
+    { LOG_AOA_MSG, sizeof(log_AOA), \
+      "AOA2", "Qf",         "TimeUS,aoa", "s-", "F-" }, \
     { LOG_MAG_MSG, sizeof(log_MAG), \
       "MAG", "QBhhhhhhhhhBI",    "TimeUS,I,MagX,MagY,MagZ,OfsX,OfsY,OfsZ,MOX,MOY,MOZ,Health,S", "s#GGGGGGGGG-s", "F-CCCCCCCCC-F", true }, \
     { LOG_MODE_MSG, sizeof(log_Mode), \
@@ -1350,6 +1356,7 @@ enum LogMessages : uint8_t {
     LOG_IDS_FROM_LANDING,
     LOG_MAG_MSG,
     LOG_ARSP_MSG,
+    LOG_AOA_MSG,
     LOG_IDS_FROM_RPM,
     LOG_RFND_MSG,
     LOG_MAV_STATS,
